@@ -1,0 +1,60 @@
+definitions:
+  ErrorResponse:
+    properties:
+      code:
+        description: application-specific error code
+        example: 404
+        type: integer
+      error:
+        description: application-level error message, for debugging
+        example: The requested resource was not found on the server
+        type: string
+      status:
+        description: user-level status message
+        example: Resource not found.
+        type: string
+    type: object
+  Subscriber:
+    properties:
+      email:
+        example: email@example.com
+        type: string
+    type: object
+info:
+  contact:
+    email: hello@anis-bouzahar.dev
+    name: Anis BOUZAHAR
+  description: |-
+    This is the API for Anis's portfolio.
+    Will gradually add endpoints based as requirements evolve
+  title: Anis's portfolio API
+paths:
+  /subscribe:
+    post:
+      consumes:
+      - application/json
+      description: Post order writes a new subscriber to the database
+      parameters:
+      - description: Add subscriber
+        in: body
+        name: subscriber
+        required: true
+        schema:
+          $ref: '#/definitions/Subscriber'
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: Add a new subscriber to the database
+      tags:
+      - Subscriber
+swagger: "2.0"
