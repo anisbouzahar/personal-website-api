@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/anisbouzahar/portfolio-api/docs"
-	"github.com/anisbouzahar/portfolio-api/internal/app/badgerdb"
 	"github.com/anisbouzahar/portfolio-api/pkg/helpers"
 	"github.com/spf13/pflag"
 	"go.uber.org/zap"
@@ -45,13 +44,6 @@ func main() {
 
 	// print current version
 	server.Api.Logger.Info("starting up API...", zap.String("version", version))
-
-	// init badgerDB (temporary database)
-	dbClient := &badgerdb.Client{}
-	if err := dbClient.Open(helpers.GetEnvWithDefault("DB_PATH", "tmp/badgerdb")); err != nil {
-		server.Api.Logger.Error("couldn't open database", zap.Error(err))
-		os.Exit(1)
-	}
 
 	go func() {
 		if err := http.ListenAndServe(addr, server.Api.R); err != nil {

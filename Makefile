@@ -1,7 +1,7 @@
 VERSION ?= $(shell git describe --match 'v[0-9]*' --tags --always)
 
 build:
-	@go build -ldflags "-X main.version=$(VERSION)"
+	@go build -ldflags "-X main.version=$(VERSION)" ./cmd/app
 
 version:
 	@echo $(VERSION)
@@ -15,13 +15,11 @@ generate-di:
 run:
 	@docker start go-api-database &> /dev/null || docker run -d \
 	 --name go-api-database \
-	 -e POSTGRES_PASSWORD=secret \
-	 -p 5432:5432 postgres &> /dev/null
-	@DB_CONNECTION='postgresql://postgres:secret@localhost:5432/postgres?sslmode=disable' \
-	go run -ldflags "-X main.version=$(VERSION)" main.go
+	 -p 27017:27017 mongo &> /dev/null
+	go run -ldflags "-X main.version=$(VERSION)"  ./cmd/app/main.go ./cmd/app/wire_gen.go
 
 docker:
-	@docker build -t go-api:$(VERSION) ./cmd/app
+	@docker build -t portfolio-api:$(VERSION)
 
 test:
 	@go test -v ./...

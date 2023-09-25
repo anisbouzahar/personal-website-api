@@ -13,7 +13,7 @@ RUN  CGO_ENABLED=0 GOOS=linux GOARCH=arm GOARM=7 go build -o portfolio-api ./cmd
 
 FROM arm32v7/alpine:latest
 
-COPY --from=builder /app/portfolio-api /bin
+COPY --from=builder /app/portfolio-api .
 EXPOSE 8080
 
-ENTRYPOINT ["/bin/portfolio-api "]
+ENTRYPOINT ["./portfolio-api"]
